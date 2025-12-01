@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import MostViewNews
-# Register your models here.
+
+@admin.register(MostViewNews)
 class MostViewNewsAdmin(admin.ModelAdmin):
-    list_display = ('MostViewNews_title', 'MostViewNews_authorname', 'MostViewNews_date','MostViewNews_image')
-admin.site.register(MostViewNews, MostViewNewsAdmin)
+    list_display = ['title', 'authorname', 'date', 'image']  # ← FIXED
+    list_filter = ['date']

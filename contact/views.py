@@ -1,9 +1,10 @@
 from datetime import datetime
 from django.shortcuts import render
 from .models import ContactMessage
-from django.core.mail import send_mail
+from django.core.mail import send_mail, EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
+
 
 def contact_view(request):
 
@@ -21,60 +22,58 @@ def contact_view(request):
         phone = request.POST.get('phone', '').strip()
 
     # Save the contact message
-        ContactMessage.objects.create(
-        name=name,
-        email=email,
-        phone=phone,
-        subject=subject,
-        message=message
-    )
+        contact_message = ContactMessage(
+            name=name,
+            email=email,
+            subject=subject,
+            message=message,
+            phone=phone
+        )
+        contact_message.save()
         msg = 'Your message has been sent successfully.'
 
         # Email Content
         subject_body = f"Thank You for Contacting Us {subject}"
 
         # render HTML email from template and create plain-text fallback
-        user_html = render_to_string('email_template.html', {
+        html_content = render_to_string('email_template.html', {
             'name': name,
             'email': email,
             'subject': subject,
             'message': message,
         })
-        user_plain = strip_tags(user_html)
-
-        send_mail(
-            subject= subject_body,
-            message= user_plain,
-            from_email= 'madhavsharma88042@gmail.com',
-            recipient_list= [email],
-            fail_silently= False,
-            html_message=user_html,
+        text_content = (
+            f"Dear {name},\n\n"
+            f"Thank you for reaching out to us regarding '{subject}'. We have received your message and will get back to you shortly.\n\n"
+            f"Best regards,\n"
+            f"NewsMagazine Team"
         )
-
+            # send email to user
+        emails = EmailMultiAlternatives(
+            subject=subject_body,
+            body=text_content,
+            from_email='madhavsharma88042@gmail.com',
+            to=[email],
+        )
+        emails.attach_alternative(html_content, "text/html")
+        emails.send(fail_silently=False)
+        # send email to admin
         admin_subject = f"New Contact Form Submission from {name}"
         admin_message = (
             f"New message recieved from contact form :\n\n"
             f"Name : {name}\n"
             f"Email : {email}\n"
             f"Subject: {subject}\n"
+            f"Phone: {phone}\n"
             f"Message : {message}\n"
         )
 
         # send admin email also as HTML (reuse template or create a simple admin view)
-        admin_html = render_to_string('email_template.html', {
-            'name': name,
-            'email': email,
-            'subject': subject,
-            'message': message,
-        })
-        admin_plain = strip_tags(admin_html)
-
-        send_mail(
-            subject = admin_subject,
-            message = admin_plain,
-            from_email = 'madhavsharma88042@gmail.com',
-            recipient_list= ['madhavsharma88041@gmail.com'],
-            fail_silently= False,
-            html_message=admin_html,
+        admin_email = EmailMultiAlternatives(
+            subject=admin_subject,
+            body=admin_message,
+            from_email='madhavsharma88042@gmail.com',
+            to=['madhavsharma88041@gmail.com'],
         )
-    return render(request, 'contact.html', {'msg': msg, 'formatted_date': formatted_date})
+        admin_email.send(fail_silently=False)
+    return render(request, 'contact.html', {'msg': msg, 'date': formatted_date})

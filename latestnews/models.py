@@ -1,8 +1,16 @@
+# ...existing code...
 from django.db import models
 
-# Create your models here.
 class LatestNews(models.Model):
-    LatestNews_title = models.CharField(max_length=200)
-    LatestNews_authorname = models.CharField(max_length=100)
-    LatestNews_date = models.DateField()
-    LatestNews_image = models.FileField(upload_to='latestnews',max_length=255, null=True, default=None)
+    CATEGORY_CHOICES = [
+        ('Sports', 'Sports')
+    ]
+
+    title = models.CharField(max_length=200)
+    authorname = models.CharField(max_length=100)
+    date = models.DateField()
+    image = models.ImageField(upload_to='latestnews/')
+    category = models.CharField(max_length=30, choices=CATEGORY_CHOICES, null=True, blank=True)  # NEW
+    def __str__(self):
+        return self.title
+# ...existing code...

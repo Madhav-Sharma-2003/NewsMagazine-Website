@@ -11,7 +11,10 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 import os
 from pathlib import Path
+from dotenv import load_dotenv
 
+load_dotenv()
+NEWS_API_KEY = os.getenv('NEWS_API_KEY')
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -40,6 +43,9 @@ INSTALLED_APPS = [
     'contact',
     'latestnews',
     'mostviewnews',
+    'leave_comment',
+    'newsapi',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -121,12 +127,6 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
-
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
 MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = '/media/'
 
@@ -139,3 +139,7 @@ EMAIL_HOST_USER = 'madhavsharma88041@gmail.com'
 EMAIL_HOST_PASSWORD = 'aunx mtpj skby sfum'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
+# Default primary key field type
+# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

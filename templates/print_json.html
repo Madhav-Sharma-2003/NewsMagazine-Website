@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head><title>Latest News Articles</title></head>
+<body>
+<h1>Latest News Articles ({{ total_results }})</h1>
+{% if articles %}
+    {% for article in articles %}
+        <div style="border:1px solid #ccc; padding:10px; margin-bottom:10px;">
+            <h3>{{ article.title|truncatewords:10 }}</h3>   
+            <p><strong>Source:</strong> {{ article.source_id }}</p>
+            <p><a href="{{ article.link }}" target="_blank">Read more</a></p>
+            <p>{{ article.description|truncatewords:50 }}</p>
+        </div>
+    {% endfor %}
+{% else %}
+    <p>No articles found.</p>
+{% endif %}
+</body>
+</html>

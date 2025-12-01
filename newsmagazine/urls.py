@@ -24,7 +24,11 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('detail/', views.detail, name='detail'),
     path('contact/', include('contact.urls')),
-    path('page_404/',views.page_404,name='page_404')
-] 
+    path('page_404/',views.page_404,name='page_404'),
+    path('newsapi/', include('newsapi.urls')),
+    path('latestnews/', include('latestnews.urls')),
+    path('newsapi/', include('newsapi.urls')),
+
+]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
